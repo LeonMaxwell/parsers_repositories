@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    build:
+      context: ./containers/mysql
+      dockerfile: ./Dockerfile
+    platform: 'linux/x86_64'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
+    environment:
+      MYSQL_DATABASE: parsers
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./containers/app
+      dockerfile: ./Dockerfile
+    container_name: app
+    environment:
+      - DB_NAME=parsers
+      - DB_USERNAME=root
+      - DB_HOSTNAME=mysql
+      - DB_PORT=3306
+      - DB_PASSWORD=password
+      - PYTHONUNBUFFERED=True
+    volumes:
+      - ./../app/:/usr/src/app
+    ports:
+      - "8000:8000"
+    links:
+      - mysql
+    restart: unless-stopped
