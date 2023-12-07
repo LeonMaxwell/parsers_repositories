@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mysql:
-    container_name: mysql
+    container_name: parsers_mysql
     build:
       context: ./containers/mysql
       dockerfile: ./Dockerfile
@@ -22,18 +22,14 @@ services:
     build:
       context: ./containers/app
       dockerfile: ./Dockerfile
-    container_name: app
+    container_name: parsers_app
     environment:
-      - DB_NAME=parsers
-      - DB_USERNAME=root
-      - DB_HOSTNAME=mysql
-      - DB_PORT=3306
-      - DB_PASSWORD=password
+      - HOST_DB=mysql
       - PYTHONUNBUFFERED=True
     volumes:
       - ./../app/:/usr/src/app
     ports:
-      - "8000:8000"
+      - "7000:7000"
     links:
       - mysql
     restart: unless-stopped
