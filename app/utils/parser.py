@@ -22,12 +22,12 @@ class ProcessPol:
 
 
 def parsers_repository(language):
+    result = []
     logger.info(f"Start parsers repository {language}")
     payload = {}
     list_repos = []
     headers = {
-        'Accept': 'application/vnd.github.v3+json',
-        'Authorization': 'token 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'
+        'Accept': 'application/vnd.github.v3+json'
     }
 
     url = f"https://api.github.com/search/repositories?q=language:{language}&sort=stars&order=desc"
@@ -39,8 +39,14 @@ def parsers_repository(language):
     if not 'items' in response:
         return
     for res in response['items']:
-        settings.app.db.add_repositories(res)
+        list_repos.append({
+            "name": res['name'],
+            "description": str(res['description'])[:100],
+            "language": res['language'],
+            "url": res['url']
+        })
     logger.info(f"Finish parsers repository {language}")
+    return list_repos
 
 
 def start_process_pool():
@@ -57,4 +63,12 @@ def start_process_pool():
         "assembly"
     ]
     with ProcessPol(10) as pool:
-        pool.map(parsers_repository, list_language)
+        result = pool.map(parsers_repository, list_language)
+
+    for pool in result:
+        for data in pool:
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join(['%s'] * len(data))
+            values = tuple(data.values())
+            query = f'INSERT INTO repositories ({columns}) VALUES ({placeholders})'
+            settings.app.db.execute_query(query, values)
