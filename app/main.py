@@ -1,13 +1,9 @@
-import logging
 import uvicorn
 from fastapi import FastAPI
 import settings
 from base_service.exceptions import error_middleware
 from api.views import router
 from utils.parser import start_process_pool
-
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 def init_app() -> FastAPI:

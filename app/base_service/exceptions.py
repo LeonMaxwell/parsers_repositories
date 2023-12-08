@@ -5,6 +5,7 @@ from fastapi import Request
 
 logger = logging.getLogger(__name__)
 
+
 async def error_middleware(request: Request, call_next):
     try:
         response = await call_next(request)

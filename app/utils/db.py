@@ -1,6 +1,7 @@
 import pymysql
 from pymysql.cursors import DictCursor
 
+
 class DatabaseParser:
     def __init__(self):
         self.config = {
