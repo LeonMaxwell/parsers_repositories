@@ -31,7 +31,9 @@ class DatabaseParser:
             with conn.cursor() as cursor:
                 if values:
                     cursor.execute(query, values)
+                    cursor.fetchall()
+                    conn.commit()
                 else:
                     cursor.execute(query)
-                cursor.fetchall()
-                conn.commit()
+                    result = cursor.fetchall()
+                    return result

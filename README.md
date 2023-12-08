@@ -22,3 +22,15 @@ $ docker-compose up -d
 ```
 $ docker-compose down
 ```
+
+4. Запуск тестов
+
+```
+docker exec -it parsers_app pytest
+```
+
+5. Открыть документацию АПИ
+
+```
+http://0.0.0.0:7000/api/docs#
+```

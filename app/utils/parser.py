@@ -22,7 +22,6 @@ class ProcessPol:
 
 
 def parsers_repository(language):
-    result = []
     logger.info(f"Start parsers repository {language}")
     payload = {}
     list_repos = []

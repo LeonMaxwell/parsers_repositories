@@ -1,4 +1,5 @@
 from pydantic import BaseConfig
+
 from utils.db import DatabaseParser
 
 
